@@ -1,0 +1,132 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vir-net": {
+            "type": "string",
+            "defaultValue": "virtualNetwork1"
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "vir-netaddressprefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/16"
+        },
+        "subnet1": {
+            "type": "string",
+            "defaultValue": "Subnet-1"
+        },
+        "subnet1addressprefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/24"
+        },
+        "subnet2": {
+            "type": "string",
+            "defaultValue": "Subnet-2"
+        },
+        "subnet2addressprefix": {
+            "type": "string",
+            "defaultValue": "10.0.1.0/24"
+        }
+ 
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "[parameters('vir-net')]",
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-11-01",
+            "location": "[parameters('location')]",
+            "tags": {
+                "displayName": "virtualNetwork1"
+            },
+            "dependsOn": [
+"[resourceId('Microsoft.Network/networkSecurityGroups','networkSecurityGroup1')]",
+"[resourceId('Microsoft.Network/networkSecurityGroups','networkSecurityGroup2')]"
+            ],
+            "properties": {
+                
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('vir-netaddressprefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[parameters('subnet1')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('subnet1addressprefix')]",
+                            
+                        "networkSecurityGroup":{ "id": "[resourceId('Microsoft.Network/networkSecurityGroups','networkSecurityGroup1')]"
+                        }
+                        }
+                  
+                    },
+                    {
+                        "name": "[parameters('subnet2')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('subnet2addressprefix')]",
+                            "networkSecurityGroup": { "id": "[resourceId('Microsoft.Network/networkSecurityGroups','networkSecurityGroup2')]"
+                            
+                        }
+                        }
+                    }
+                ]
+            }
+        },
+ 
+ {
+    "name": "networkSecurityGroup1",
+    "type": "Microsoft.Network/networkSecurityGroups",
+    "apiVersion": "2020-11-01",
+    "location": "[resourceGroup().location]",
+    "properties": {
+        "securityRules": [
+            {
+                "name": "nsgRule1",
+                "properties": {
+                    "description": "description",
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "*",
+                    "sourceAddressPrefix": "*",
+                    "destinationAddressPrefix": "*",
+                    "access": "Allow",
+                    "priority": 100,
+                    "direction": "Inbound"
+                }
+            }
+        ]
+    }
+ },
+ {
+    "name": "networkSecurityGroup2",
+    "type": "Microsoft.Network/networkSecurityGroups",
+    "apiVersion": "2020-11-01",
+    "location": "[resourceGroup().location]",
+    "properties": {
+        "securityRules": [
+            {
+                "name": "nsg2Rule1",
+                "properties": {
+                    "description": "description",
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "*",
+                    "sourceAddressPrefix": "*",
+                    "destinationAddressPrefix": "*",
+                    "access": "Allow",
+                    "priority": 200,
+                    "direction": "Outbound"
+                }
+            }
+        ]
+    }
+ }
+ 
+    ],
+    "outputs": {}
+}
