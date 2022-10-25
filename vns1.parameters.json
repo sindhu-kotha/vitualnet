@@ -1,0 +1,27 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vir-net": {
+            "value": "virtualNetwork1"
+        },
+        "location": {
+            "value": "eastus" 
+        },
+        "vir-netaddressprefix": {
+            "value": "10.0.0.0/16"
+        },
+        "subnet1": {
+            "value": "Subnet-1"
+        },
+        "subnet1addressprefix": {
+            "value": "10.0.0.0/24"
+        },
+        "subnet2": {
+            "value": "Subnet-2"
+        },
+        "subnet2addressprefix": {
+            "value": "10.0.1.0/24"
+        }
+    }
+}
